@@ -1,4 +1,4 @@
-namespace Components.Serialize.Protobuf.Compiler
+namespace ZPF.Infrastructure.Components.Serialize.Protobuf.Compiler
 {
     using System;
     using System.Reflection.Emit;

@@ -1,11 +1,11 @@
-namespace Components.Serialize.Protobuf
+namespace ZPF.Infrastructure.Components.Serialize.Protobuf
 {
     using System;
     using System.Collections.Generic;
     using System.Data;
     using System.IO;
     using System.Text;
-    using Components.Serialize.Protobuf.Protobuf;
+    using ZPF.Infrastructure.Components.Serialize.Protobuf.Protobuf;
 
     internal static class ProtobufDataSetSerializer
     {

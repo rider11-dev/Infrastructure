@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Components
+namespace ZPF.Infrastructure.Components
 {
     /*
 汉字转拼音，网上的资料不少，一般都是按区位码与拼音关系查表得到。但是很少有人注意一下信息：

@@ -6,7 +6,7 @@ using System.Data.Common;
 using System.Data.SqlClient;
 using System.Data;
 
-namespace DatabaseHelper
+namespace ZPF.Infrastructure.DatabaseHelper
 {
     public class SQLServerDatabase : Database
     {

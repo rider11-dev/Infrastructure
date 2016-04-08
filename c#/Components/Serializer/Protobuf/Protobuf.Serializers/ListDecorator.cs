@@ -1,13 +1,13 @@
-namespace Components.Serialize.Protobuf.Serializers
+namespace ZPF.Infrastructure.Components.Serialize.Protobuf.Serializers
 {
     using System;
     using System.Collections;
     using System.Collections.Generic;
     using System.Reflection;
     using System.Runtime.InteropServices;
-    using Components.Serialize.Protobuf.Compiler;
-    using Components.Serialize.Protobuf.Meta;
-    using Components.Serialize.Protobuf.Protobuf;
+    using ZPF.Infrastructure.Components.Serialize.Protobuf.Compiler;
+    using ZPF.Infrastructure.Components.Serialize.Protobuf.Meta;
+    using ZPF.Infrastructure.Components.Serialize.Protobuf.Protobuf;
     internal sealed class ListDecorator : ProtoDecoratorBase
     {
         private readonly MethodInfo add;

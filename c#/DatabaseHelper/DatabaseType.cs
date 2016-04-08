@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace DatabaseHelper
+namespace ZPF.Infrastructure.DatabaseHelper
 {
     public enum DatabaseType
     {

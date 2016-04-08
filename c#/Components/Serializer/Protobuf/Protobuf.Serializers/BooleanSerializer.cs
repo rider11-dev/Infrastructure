@@ -1,8 +1,8 @@
-namespace Components.Serialize.Protobuf.Serializers
+namespace ZPF.Infrastructure.Components.Serialize.Protobuf.Serializers
 {
-    using Components.Serialize.Protobuf.Compiler;
-    using Components.Serialize.Protobuf.Meta;
-    using Components.Serialize.Protobuf.Protobuf;
+    using ZPF.Infrastructure.Components.Serialize.Protobuf.Compiler;
+    using ZPF.Infrastructure.Components.Serialize.Protobuf.Meta;
+    using ZPF.Infrastructure.Components.Serialize.Protobuf.Protobuf;
     using System;
 
     internal sealed class BooleanSerializer : IProtoSerializer

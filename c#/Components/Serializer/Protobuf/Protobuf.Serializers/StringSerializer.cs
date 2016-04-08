@@ -1,9 +1,9 @@
-namespace Components.Serialize.Protobuf.Serializers
+namespace ZPF.Infrastructure.Components.Serialize.Protobuf.Serializers
 {
     using System;
-    using Components.Serialize.Protobuf.Meta;
-    using Components.Serialize.Protobuf.Protobuf;
-    using Components.Serialize.Protobuf.Compiler;
+    using ZPF.Infrastructure.Components.Serialize.Protobuf.Meta;
+    using ZPF.Infrastructure.Components.Serialize.Protobuf.Protobuf;
+    using ZPF.Infrastructure.Components.Serialize.Protobuf.Compiler;
     internal sealed class StringSerializer : IProtoSerializer
     {
         private static readonly Type expectedType = typeof(string);

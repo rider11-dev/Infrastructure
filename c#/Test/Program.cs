@@ -18,15 +18,15 @@ namespace Test
 
         static void TestDb()
         {
-            DataSet ds = null;
-            Database db = Database.CurrentDB;
+            //DataSet ds = null;
+            //Database db = Database.CurrentDB;
             //ora
             //ds = db.GetDataSet("select * from all_users");
             //mss
             //ds = db.GetDataSet("select * from GB_CaoZhuo_ZiDian");
             //mysql
-            db.ExecuteSql("use mysql");
-            ds = db.GetDataSet("select * from user");
+            //db.ExecuteSql("use mysql");
+            //ds = db.GetDataSet("select * from user");
         }
     }
 }

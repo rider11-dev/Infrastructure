@@ -1,4 +1,4 @@
-namespace Components.Serialize.Protobuf.Protobuf 
+namespace ZPF.Infrastructure.Components.Serialize.Protobuf.Protobuf 
 {
     using System;
     using System.Diagnostics;

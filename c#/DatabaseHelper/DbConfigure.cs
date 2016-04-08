@@ -4,7 +4,7 @@ using System.Configuration;
 using System.Linq;
 using System.Text;
 
-namespace DatabaseHelper
+namespace ZPF.Infrastructure.DatabaseHelper
 {
     /// <summary>
     /// 配置操作类

@@ -1,4 +1,4 @@
-namespace Components.Serialize.Protobuf.Serializers
+namespace ZPF.Infrastructure.Components.Serialize.Protobuf.Serializers
 {
     internal interface ISerializerProxy
     {

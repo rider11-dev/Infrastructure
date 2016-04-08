@@ -7,12 +7,12 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
-using Components.Serialize.Protobuf;
-using Components.Extensions;
+using ZPF.Infrastructure.Components.Serialize.Protobuf;
+using ZPF.Infrastructure.Components.Extensions;
 using System.Runtime.Serialization.Json;
 using System.Text.RegularExpressions;
 
-namespace Components.Serialize
+namespace ZPF.Infrastructure.Components.Serialize
 {
     public class Serializer
     {

@@ -8,7 +8,7 @@ using System.Data.SqlClient;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
 
-namespace DatabaseHelper
+namespace ZPF.Infrastructure.DatabaseHelper
 {
     public abstract class Database
     {

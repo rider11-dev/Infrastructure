@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Components.Extensions
+namespace ZPF.Infrastructure.Components.Extensions
 {
     /// <summary>
     /// 字符串扩展类

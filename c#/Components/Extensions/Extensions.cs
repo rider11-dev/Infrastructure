@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 
-namespace Components.Extensions
+namespace ZPF.Infrastructure.Components.Extensions
 {
     public static class Extensions
     {

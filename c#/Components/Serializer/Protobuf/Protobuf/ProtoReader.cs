@@ -1,6 +1,6 @@
-namespace Components.Serialize.Protobuf.Protobuf
+namespace ZPF.Infrastructure.Components.Serialize.Protobuf.Protobuf
 {
-    using Components.Serialize.Protobuf.Meta;
+    using ZPF.Infrastructure.Components.Serialize.Protobuf.Meta;
     using System;
     using System.Collections.Generic;
     using System.IO;

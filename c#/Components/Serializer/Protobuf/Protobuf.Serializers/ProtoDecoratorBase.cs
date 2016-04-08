@@ -1,7 +1,7 @@
-namespace Components.Serialize.Protobuf.Serializers
+namespace ZPF.Infrastructure.Components.Serialize.Protobuf.Serializers
 {
-    using Components.Serialize.Protobuf.Compiler;
-    using Components.Serialize.Protobuf.Protobuf;
+    using ZPF.Infrastructure.Components.Serialize.Protobuf.Compiler;
+    using ZPF.Infrastructure.Components.Serialize.Protobuf.Protobuf;
     using System;
 
     internal abstract class ProtoDecoratorBase : IProtoSerializer

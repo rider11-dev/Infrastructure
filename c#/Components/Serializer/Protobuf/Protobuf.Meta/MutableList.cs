@@ -1,4 +1,4 @@
-namespace Components.Serialize.Protobuf.Meta
+namespace ZPF.Infrastructure.Components.Serialize.Protobuf.Meta
 {
     using System;
     using System.Reflection;

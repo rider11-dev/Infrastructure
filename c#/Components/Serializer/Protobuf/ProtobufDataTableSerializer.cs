@@ -1,7 +1,7 @@
-namespace Components.Serialize.Protobuf
+namespace ZPF.Infrastructure.Components.Serialize.Protobuf
 {
-    using Components.Extensions;
-    using Components.Serialize.Protobuf.Protobuf;
+    using ZPF.Infrastructure.Components.Extensions;
+    using ZPF.Infrastructure.Components.Serialize.Protobuf.Protobuf;
     using System;
     using System.Collections.Generic;
     using System.Data;

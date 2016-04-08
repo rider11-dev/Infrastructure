@@ -6,7 +6,7 @@ using System.Data.Common;
 using System.Data;
 using Oracle.ManagedDataAccess.Client;
 
-namespace DatabaseHelper
+namespace ZPF.Infrastructure.DatabaseHelper
 {
     public class OracleDatabase : Database
     {
