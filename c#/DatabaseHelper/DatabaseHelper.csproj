@@ -55,7 +55,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DbContext.cs" />
-    <Compile Include="DbConfigure.cs" />
+    <Compile Include="DbConfigureHelper.cs" />
     <Compile Include="DbHelper.cs" />
     <Compile Include="DbHelperFactory.cs" />
     <Compile Include="DbType.cs" />
