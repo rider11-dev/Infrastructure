@@ -6,11 +6,8 @@ using System.Threading.Tasks;
 
 namespace ZPF.Infrastructure.Components
 {
-    public class CommonConstants
+    public class Common
     {
-        /// <summary>
-        /// 命名空间
-        /// </summary>
-        public const string NameSpace = "http://www.zpf.com";
+        public const string ConfigureFile = "app.config";
     }
 }

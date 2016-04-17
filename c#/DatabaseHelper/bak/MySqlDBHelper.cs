@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace ZPF.Infrastructure.DatabaseHelper
 {
-    public class MySQLDatabase : Database
+    public class MySqlDBHelper : DBHelper
     {
-        public MySQLDatabase() : base() { }
+        public MySqlDBHelper() : base() { }
 
         protected override DbConnection GetConnection()
         {

@@ -5,11 +5,12 @@ using System.Text;
 
 namespace ZPF.Infrastructure.DatabaseHelper
 {
-    public enum DatabaseType
+    public enum DbType
     {
         SqlServer,
         Oracle,
         MySQL,
-        None
+        SqlLite,
+        UnKnown
     }
 }

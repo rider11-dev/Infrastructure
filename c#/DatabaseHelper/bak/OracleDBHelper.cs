@@ -8,9 +8,9 @@ using Oracle.ManagedDataAccess.Client;
 
 namespace ZPF.Infrastructure.DatabaseHelper
 {
-    public class OracleDatabase : Database
+    public class OracleDBHelper : DBHelper
     {
-        public OracleDatabase() : base() { }
+        public OracleDBHelper() : base() { }
 
         protected override DbConnection GetConnection()
         {

@@ -1,47 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
+using ZPF.Infrastructure.Components;
 
 namespace ZPF.Infrastructure.DatabaseHelper
 {
-    /// <summary>
-    /// 配置操作类
-    /// </summary>
-    public class DbConfigure
+    public class DbConfigureHelper
     {
-        /// <summary>
-        /// 获取数据库类型
-        /// </summary>
-        /// <returns></returns>
-        public static DatabaseType GetDBType()
+        const string KeyDbType = "dbtype";
+        const string NameDbConnString = "dbconn";
+
+        static ConfigureHelper confHelper = new ConfigureHelper();
+
+        public static string GetDbType()
         {
-            string typeStr = ConfigurationManager.AppSettings["dbtype"];
-            switch (typeStr)
-            {
-                case "mss":
-                    return DatabaseType.SqlServer;
-                case "ora":
-                    return DatabaseType.Oracle;
-                case "mysql":
-                    return DatabaseType.MySQL;
-                default:
-                    return DatabaseType.None;
-            }
+            return confHelper.GetAppSettings(KeyDbType);
         }
 
-        /// <summary>
-        /// 获取数据库连接字符串
-        /// </summary>
-        /// <returns></returns>
-        public static string GetDBConnectionString()
+        public static string GetConnectString()
         {
-            return ConfigurationManager.AppSettings["dbconn"];
+            return confHelper.GetConnectionString(NameDbConnString);
         }
-        /// <summary>
-        /// 是否记录错误日志
-        /// </summary>
-        public static bool LogError { get { return Convert.ToBoolean(ConfigurationManager.AppSettings["logerror"]); } }
     }
 }

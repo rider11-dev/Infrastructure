@@ -10,16 +10,10 @@ using System.IO;
 
 namespace ZPF.Infrastructure.DatabaseHelper
 {
-    public abstract class Database
+    public abstract class DBHelper
     {
         #region 属性变量
-        private static DatabaseType DBType
-        {
-            get
-            {
-                return DbConfigure.GetDBType();
-            }
-        }
+        public virtual DBType DBType { get; }
         private DbConnection _conn;
         /// <summary>
         /// 数据库连接
@@ -37,28 +31,14 @@ namespace ZPF.Infrastructure.DatabaseHelper
                 this._conn = value;
             }
         }
-        private static Database _instance = null;
-        public static Database CurrentDB
+        private static DBHelper _instance = null;
+        public static DBHelper CurrentDB
         {
             get
             {
                 if (_instance == null)
                 {
-                    switch (DBType)
-                    {
-                        case DatabaseType.SqlServer:
-                            _instance = new SQLServerDatabase();
-                            break;
-                        case DatabaseType.Oracle:
-                            _instance = new OracleDatabase();
-                            break;
-                        case DatabaseType.MySQL:
-                            _instance = new MySQLDatabase();
-                            break;
-                        default:
-                            _instance = null;
-                            break;
-                    }
+                    _instance = DBHelperFactory.CreateInstance();
                 }
                 return _instance;
             }
@@ -70,6 +50,15 @@ namespace ZPF.Infrastructure.DatabaseHelper
         #endregion
 
         #region 外部方法
+        /// <summary>
+        /// 连接测试
+        /// </summary>
+        /// <returns></returns>
+        public bool TestConnection()
+        {
+
+        }
+
         public int ExecuteSql(string sql)
         {
             DbCommand cmd = GetDBCommand(sql);
@@ -113,7 +102,7 @@ namespace ZPF.Infrastructure.DatabaseHelper
             DbDataAdapter adapter = GetDataAdapter(sql, dbParas);
             return GetDataSetInternal(adapter);
         }
-        
+
         /// <summary>
         /// 打开连接
         /// </summary>

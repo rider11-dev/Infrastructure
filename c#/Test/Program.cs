@@ -1,4 +1,4 @@
-﻿using DatabaseHelper;
+﻿using ZPF.Infrastructure.DatabaseHelper;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -12,21 +12,19 @@ namespace Test
     {
         static void Main(string[] args)
         {
-            TestDb();
+            //TestConfManager();
+            TestDbHelper();
             Console.ReadKey();
         }
 
-        static void TestDb()
+        public static void TestConfManager()
         {
-            //DataSet ds = null;
-            //Database db = Database.CurrentDB;
-            //ora
-            //ds = db.GetDataSet("select * from all_users");
-            //mss
-            //ds = db.GetDataSet("select * from GB_CaoZhuo_ZiDian");
-            //mysql
-            //db.ExecuteSql("use mysql");
-            //ds = db.GetDataSet("select * from user");
+            new ConfigureManagerTest("app.config").Test();
+        }
+
+        public static void TestDbHelper()
+        {
+            DbHelperTest.Test();
         }
     }
 }

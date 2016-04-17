@@ -8,9 +8,17 @@ using System.Data;
 
 namespace ZPF.Infrastructure.DatabaseHelper
 {
-    public class SQLServerDatabase : Database
+    public class SqlServerDBHelper : DBHelper
     {
-        public SQLServerDatabase() : base() { }
+        public override DBType DBType
+        {
+            get
+            {
+                return DBType.SqlServer;
+            }
+        }
+
+        public SqlServerDBHelper() : base() { }
 
         protected override DbConnection GetConnection()
         {
