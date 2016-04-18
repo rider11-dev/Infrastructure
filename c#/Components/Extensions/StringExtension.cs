@@ -65,5 +65,15 @@ namespace ZPF.Infrastructure.Components.Extensions
                 return sb.ToString();
             }
         }
+
+        public static bool IsEmpty(this string str)
+        {
+            return (str == null) || (string.IsNullOrEmpty(str.Trim()));
+        }
+
+        public static bool IsNotEmpty(this string str)
+        {
+            return !str.IsEmpty();
+        }
     }
 }

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ZPF.Infrastructure.DatabaseHelper
 {
-    public class SqlLiteDbHelper : DbHelper
+    internal class SQLiteDbHelper : DbHelper
     {
         public override DbType DbType
         {
@@ -26,6 +26,19 @@ namespace ZPF.Infrastructure.DatabaseHelper
         protected override DbCommand GetDbCommand(string sql)
         {
             return new SQLiteCommand(sql, base.Connection as SQLiteConnection);
+        }
+        
+        protected override DbDataAdapter GetDataAdapter(string sql)
+        {
+            SQLiteCommand cmd = this.GetDbCommand(sql) as SQLiteCommand;
+            return new SQLiteDataAdapter(cmd);
+        }
+
+        protected override DbDataAdapter GetDataAdapter(string sql, params DbParameter[] dbParams)
+        {
+            SQLiteCommand cmd = this.GetDbCommand(sql) as SQLiteCommand;
+            cmd.Parameters.AddRange(dbParams);
+            return new SQLiteDataAdapter(cmd);
         }
     }
 }

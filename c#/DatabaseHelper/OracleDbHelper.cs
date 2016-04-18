@@ -8,7 +8,7 @@ using Oracle.ManagedDataAccess.Client;
 
 namespace ZPF.Infrastructure.DatabaseHelper
 {
-    public class OracleDbHelper : DbHelper
+    internal class OracleDbHelper : DbHelper
     {
         public OracleDbHelper() : base() { }
 
@@ -28,6 +28,19 @@ namespace ZPF.Infrastructure.DatabaseHelper
         protected override DbCommand GetDbCommand(string sql)
         {
             return new OracleCommand(sql, base.Connection as OracleConnection);
+        }
+
+        protected override DbDataAdapter GetDataAdapter(string sql)
+        {
+            OracleCommand cmd = this.GetDbCommand(sql) as OracleCommand;
+            return new OracleDataAdapter(cmd);
+        }
+
+        protected override DbDataAdapter GetDataAdapter(string sql, params DbParameter[] dbParams)
+        {
+            OracleCommand cmd = this.GetDbCommand(sql) as OracleCommand;
+            cmd.Parameters.AddRange(dbParams);
+            return new OracleDataAdapter(cmd);
         }
     }
 }

@@ -10,7 +10,7 @@ namespace ZPF.Infrastructure.DatabaseHelper
     /// <summary>
     /// 数据库操作工厂类
     /// </summary>
-    public class DbHelperFactory
+    internal class DbHelperFactory
     {
         public static IDbHelper CreateInstance()
         {
@@ -26,7 +26,7 @@ namespace ZPF.Infrastructure.DatabaseHelper
                     case "mysql":
                         return new MySqlDbHelper();
                     case "sqlite":
-                        return new SqlLiteDbHelper();
+                        return new SQLiteDbHelper();
                     default:
                         return null;
                 }

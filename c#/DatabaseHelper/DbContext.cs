@@ -21,5 +21,23 @@ namespace ZPF.Infrastructure.DatabaseHelper
                 return _currentDbHelper;
             }
         }
+
+        public static string VariablePrefix
+        {
+            get
+            {
+                switch (DbHelper.DbType)
+                {
+                    case DbType.SqlServer:
+                    case DbType.MySQL:
+                    case DbType.SqlLite:
+                        return "@";
+                    case DbType.Oracle:
+                        return ":";
+                    default:
+                        return "";
+                }
+            }
+        }
     }
 }

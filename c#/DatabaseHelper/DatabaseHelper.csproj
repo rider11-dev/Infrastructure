@@ -63,7 +63,7 @@
     <Compile Include="MySqlDbHelper.cs" />
     <Compile Include="OracleDbHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SqlLiteDbHelper.cs" />
+    <Compile Include="SQLiteDbHelper.cs" />
     <Compile Include="SqlServerDbHelper.cs" />
   </ItemGroup>
   <ItemGroup>

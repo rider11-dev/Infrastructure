@@ -9,22 +9,8 @@ using System.Xml;
 
 namespace ZPF.Infrastructure.Components.Extensions
 {
-    public static class Extensions
+    public static class DataExtention
     {
-        #region String
-        public static bool IsEmpty(this string str)
-        {
-            return (str == null) || (string.IsNullOrEmpty(str.Trim()));
-        }
-
-        public static bool IsNotEmpty(this string str)
-        {
-            return !str.IsEmpty();
-        }
-        #endregion
-
-        #region Data
-
         public static bool HasRow(this DataSet ds)
         {
             return (ds != null) && (ds.Tables.Count > 0) && (ds.Tables[0].Rows.Count > 0);
@@ -135,34 +121,5 @@ namespace ZPF.Infrastructure.Components.Extensions
             }
             return ds;
         }
-
-        public static void CopyOnSameColumn(this DataRow rowDest, DataRow rowSrc)
-        {
-            foreach (DataColumn col in rowDest.Table.Columns)
-            {
-                if (rowSrc.Table.Columns.Contains(col.ColumnName))
-                {
-                    rowDest[col.ColumnName] = (rowDest[col.ColumnName] is Boolean) ? rowSrc[col.ColumnName].ToBool() : rowSrc[col.ColumnName];
-                }
-            }
-        }
-
-        public static bool ToBool(this object obj)
-        {
-            if (obj is bool)
-            {
-                return (bool)obj;
-            }
-            if (obj == null || obj is DBNull)
-            {
-                return false;
-            }
-
-            string s = obj.ToString().ToLower();
-            return s == "1" || s == "true";
-        }
-
-        #endregion
-
     }
 }

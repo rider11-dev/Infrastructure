@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ZPF.Infrastructure.DatabaseHelper
 {
-    public class MySqlDbHelper : DbHelper
+    internal class MySqlDbHelper : DbHelper
     {
         public MySqlDbHelper() : base() { }
 
@@ -28,6 +28,19 @@ namespace ZPF.Infrastructure.DatabaseHelper
         protected override DbCommand GetDbCommand(string sql)
         {
             return new MySqlCommand(sql, base.Connection as MySqlConnection);
+        }
+
+        protected override DbDataAdapter GetDataAdapter(string sql)
+        {
+            MySqlCommand cmd = this.GetDbCommand(sql) as MySqlCommand;
+            return new MySqlDataAdapter(cmd);
+        }
+
+        protected override DbDataAdapter GetDataAdapter(string sql, params DbParameter[] dbParams)
+        {
+            MySqlCommand cmd = this.GetDbCommand(sql) as MySqlCommand;
+            cmd.Parameters.AddRange(dbParams);
+            return new MySqlDataAdapter(cmd);
         }
     }
 }

@@ -11,7 +11,7 @@ using ZPF.Infrastructure.Components;
 
 namespace ZPF.Infrastructure.DatabaseHelper
 {
-    public abstract class DbHelper : IDbHelper
+    internal abstract class DbHelper : IDbHelper
     {
         #region 属性变量
         public abstract DbType DbType { get; }
@@ -70,9 +70,7 @@ namespace ZPF.Infrastructure.DatabaseHelper
             }
             catch (Exception ex)
             {
-                //TODO:此处记录日志；暂时throw
-                throw ex;
-                return false;
+                throw new Exception("测试数据库连接失败：" + ex.Message, ex);
             }
             finally
             {
@@ -84,13 +82,44 @@ namespace ZPF.Infrastructure.DatabaseHelper
         public int ExecuteSql(string sql)
         {
             DbCommand cmd = this.GetDbCommand(sql);
-            return ExecuteCore(cmd);
+            return ExecuteNonQueryCore(cmd);
         }
 
+        public int ExecuteSql(string sql, params DbParameter[] dbParams)
+        {
+            DbCommand cmd = this.GetDbCommand(sql);
+            cmd.Parameters.AddRange(dbParams);
+            return ExecuteNonQueryCore(cmd);
+        }
+
+        public object ExecuteScalar(string sql)
+        {
+            DbCommand cmd = this.GetDbCommand(sql);
+            return ExecuteScalarCore(cmd);
+        }
+
+        public object ExecuteScalar(string sql, params DbParameter[] dbParams)
+        {
+            DbCommand cmd = this.GetDbCommand(sql);
+            cmd.Parameters.AddRange(dbParams);
+            return ExecuteScalarCore(cmd);
+        }
+
+        public DataSet GetDataSet(string sql)
+        {
+            DbDataAdapter adapter = GetDataAdapter(sql);
+            return GetDataSetCore(adapter);
+        }
+
+        public DataSet GetDataSet(string sql, params DbParameter[] dbParams)
+        {
+            DbDataAdapter adapter = GetDataAdapter(sql, dbParams);
+            return GetDataSetCore(adapter);
+        }
         #endregion
 
         #region 私有方法
-        private int ExecuteCore(DbCommand cmd)
+        private int ExecuteNonQueryCore(DbCommand cmd)
         {
             int result = 0;
             bool error = false;
@@ -120,11 +149,67 @@ namespace ZPF.Infrastructure.DatabaseHelper
             return result;
         }
 
+        private object ExecuteScalarCore(DbCommand cmd)
+        {
+            object result = 0;
+            bool error = false;
+            try
+            {
+                Open();
+                result = cmd.ExecuteScalar();
+            }
+            catch (Exception ex)
+            {
+                error = true;
+                if (cmd.Transaction != null)
+                {
+                    cmd.Transaction.Rollback();
+                }
+                throw new Exception(Msg_Error + "," + ex.Message, ex);
+            }
+            finally
+            {
+                cmd.Dispose();
+                if (AutoClose || error)
+                {
+                    Close();
+                }
+            }
+
+            return result;
+        }
+
+        private DataSet GetDataSetCore(DbDataAdapter adapter)
+        {
+            DataSet ds = new DataSet();
+            bool exHappened = false;
+            try
+            {
+                adapter.Fill(ds);
+            }
+            catch (Exception ex)
+            {
+                exHappened = true;
+                throw new Exception(Msg_Error + "," + ex.Message, ex);
+            }
+            finally
+            {
+                if (AutoClose || exHappened)
+                {
+                    Close();
+                }
+            }
+
+            return ds;
+        }
+
         #endregion
 
         #region 子类实现方法
         protected abstract DbConnection GetConnection();
         protected abstract DbCommand GetDbCommand(string sql);
+        protected abstract DbDataAdapter GetDataAdapter(string sql);
+        protected abstract DbDataAdapter GetDataAdapter(string sql, params DbParameter[] dbParams);
         #endregion
 
         /// <summary>
