@@ -19,7 +19,7 @@ namespace ZPF.Infrastructure.DatabaseHelper
         /// <summary>
         /// 数据库连接
         /// </summary>
-        protected DbConnection Connection
+        public DbConnection Connection
         {
             get
             {
@@ -52,10 +52,17 @@ namespace ZPF.Infrastructure.DatabaseHelper
         /// <summary>
         /// 是否自动关闭连接
         /// </summary>
-        public bool AutoClose = true;
+        public bool AutoClose { get; set; }
 
         const string Msg_Error = "数据库操作失败";
+
+        protected DbTransaction _transaction = null;
         #endregion
+
+        public DbHelper()
+        {
+            AutoClose = true;
+        }
 
         #region 外部方法
         /// <summary>
@@ -79,43 +86,59 @@ namespace ZPF.Infrastructure.DatabaseHelper
             return true;
         }
 
-        public int ExecuteSql(string sql)
-        {
-            DbCommand cmd = this.GetDbCommand(sql);
-            return ExecuteNonQueryCore(cmd);
-        }
 
         public int ExecuteSql(string sql, params DbParameter[] dbParams)
         {
             DbCommand cmd = this.GetDbCommand(sql);
+            cmd.Transaction = _transaction;
             cmd.Parameters.AddRange(dbParams);
             return ExecuteNonQueryCore(cmd);
-        }
-
-        public object ExecuteScalar(string sql)
-        {
-            DbCommand cmd = this.GetDbCommand(sql);
-            return ExecuteScalarCore(cmd);
         }
 
         public object ExecuteScalar(string sql, params DbParameter[] dbParams)
         {
             DbCommand cmd = this.GetDbCommand(sql);
+            cmd.Transaction = _transaction;
             cmd.Parameters.AddRange(dbParams);
             return ExecuteScalarCore(cmd);
-        }
-
-        public DataSet GetDataSet(string sql)
-        {
-            DbDataAdapter adapter = GetDataAdapter(sql);
-            return GetDataSetCore(adapter);
         }
 
         public DataSet GetDataSet(string sql, params DbParameter[] dbParams)
         {
             DbDataAdapter adapter = GetDataAdapter(sql, dbParams);
+            foreach (DbCommand cmd in new[] { adapter.SelectCommand, adapter.InsertCommand, adapter.UpdateCommand, adapter.DeleteCommand })
+            {
+                if (cmd != null)
+                {
+                    cmd.Transaction = _transaction;
+                }
+            }
             return GetDataSetCore(adapter);
         }
+
+        public void BeginTransaction()
+        {
+            AutoClose = false;
+            Connection.Open();
+            _transaction = Connection.BeginTransaction();
+        }
+
+        public void Commit()
+        {
+            if (_transaction != null)
+            {
+                _transaction.Commit();
+            }
+        }
+
+        public void Rollback()
+        {
+            if (_transaction != null)
+            {
+                _transaction.Rollback();
+            }
+        }
+
         #endregion
 
         #region 私有方法
@@ -208,7 +231,6 @@ namespace ZPF.Infrastructure.DatabaseHelper
         #region 子类实现方法
         protected abstract DbConnection GetConnection();
         protected abstract DbCommand GetDbCommand(string sql);
-        protected abstract DbDataAdapter GetDataAdapter(string sql);
         protected abstract DbDataAdapter GetDataAdapter(string sql, params DbParameter[] dbParams);
         #endregion
 
@@ -239,5 +261,6 @@ namespace ZPF.Infrastructure.DatabaseHelper
                 this._conn.Close();
             }
         }
+
     }
 }

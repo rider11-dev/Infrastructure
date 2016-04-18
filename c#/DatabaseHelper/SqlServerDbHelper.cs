@@ -30,12 +30,6 @@ namespace ZPF.Infrastructure.DatabaseHelper
             return new SqlCommand(sql, base.Connection as SqlConnection);
         }
 
-        protected override DbDataAdapter GetDataAdapter(string sql)
-        {
-            SqlCommand cmd = this.GetDbCommand(sql) as SqlCommand;
-            return new SqlDataAdapter(cmd);
-        }
-
         protected override DbDataAdapter GetDataAdapter(string sql, params DbParameter[] dbParams)
         {
             SqlCommand cmd = this.GetDbCommand(sql) as SqlCommand;

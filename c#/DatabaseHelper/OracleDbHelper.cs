@@ -30,11 +30,6 @@ namespace ZPF.Infrastructure.DatabaseHelper
             return new OracleCommand(sql, base.Connection as OracleConnection);
         }
 
-        protected override DbDataAdapter GetDataAdapter(string sql)
-        {
-            OracleCommand cmd = this.GetDbCommand(sql) as OracleCommand;
-            return new OracleDataAdapter(cmd);
-        }
 
         protected override DbDataAdapter GetDataAdapter(string sql, params DbParameter[] dbParams)
         {

@@ -23,13 +23,32 @@ namespace Test
             ConnectTest();
 
             //ExecuteSqlTest();
-            ExecuteSqlWithParamsTest();
+            //ExecuteSqlWithParamsTest();
 
             //ExecuteScalarTest();
             //ExecuteScalarWithParamsTest();
 
             //GetDataSetTest();
             //GetDataSetWithParameterTest();
+
+            TransactionTest();
+        }
+
+        static void TransactionTest()
+        {
+            try
+            {
+                DbContext.DbHelper.BeginTransaction();
+                string sql1 = "update salesorder set count=222";
+                string sql2 = "update salesorderitems set count=22";
+                DbContext.DbHelper.ExecuteSql(sql1);
+                DbContext.DbHelper.ExecuteSql(sql2);
+                DbContext.DbHelper.Commit();
+            }
+            catch (Exception ex)
+            {
+                DbContext.DbHelper.Rollback();
+            }
         }
 
         static void ConnectTest()

@@ -27,12 +27,6 @@ namespace ZPF.Infrastructure.DatabaseHelper
         {
             return new SQLiteCommand(sql, base.Connection as SQLiteConnection);
         }
-        
-        protected override DbDataAdapter GetDataAdapter(string sql)
-        {
-            SQLiteCommand cmd = this.GetDbCommand(sql) as SQLiteCommand;
-            return new SQLiteDataAdapter(cmd);
-        }
 
         protected override DbDataAdapter GetDataAdapter(string sql, params DbParameter[] dbParams)
         {
