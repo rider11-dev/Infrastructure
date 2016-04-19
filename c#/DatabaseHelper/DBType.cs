@@ -10,7 +10,7 @@ namespace ZPF.Infrastructure.DatabaseHelper
         SqlServer,
         Oracle,
         MySQL,
-        SqlLite,
+        SQLite,
         UnKnown
     }
 }

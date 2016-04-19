@@ -57,14 +57,9 @@
     <Compile Include="DbConfigureHelper.cs" />
     <Compile Include="DbContext.cs" />
     <Compile Include="DbHelper.cs" />
-    <Compile Include="DbHelperFactory.cs" />
     <Compile Include="DbType.cs" />
     <Compile Include="IDbHelper.cs" />
-    <Compile Include="MySqlDbHelper.cs" />
-    <Compile Include="OracleDbHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SQLiteDbHelper.cs" />
-    <Compile Include="SqlServerDbHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

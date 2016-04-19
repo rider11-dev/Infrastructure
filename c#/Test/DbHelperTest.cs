@@ -23,7 +23,7 @@ namespace Test
             ConnectTest();
 
             //ExecuteSqlTest();
-            //ExecuteSqlWithParamsTest();
+            ExecuteSqlWithParamsTest();
 
             //ExecuteScalarTest();
             //ExecuteScalarWithParamsTest();
@@ -31,23 +31,18 @@ namespace Test
             //GetDataSetTest();
             //GetDataSetWithParameterTest();
 
-            TransactionTest();
+            //TransactionTest();
         }
 
         static void TransactionTest()
         {
             try
             {
-                DbContext.DbHelper.BeginTransaction();
-                string sql1 = "update salesorder set count=222";
-                string sql2 = "update salesorderitems set count=22";
-                DbContext.DbHelper.ExecuteSql(sql1);
-                DbContext.DbHelper.ExecuteSql(sql2);
-                DbContext.DbHelper.Commit();
+                //string sql1 = "update salesorder set count=222";
+                //string sql2 = "update salesorderitems set cogunt=22";
             }
             catch (Exception ex)
             {
-                DbContext.DbHelper.Rollback();
             }
         }
 
@@ -69,9 +64,9 @@ namespace Test
         static void ExecuteSqlTest()
         {
             //mss|ora
-            //string sql = @"upate salesorder set count=count;";
+            string sql = @"update salesorder set count=count";
             //mysql
-            string sql = @"UPDATE salesorder SET `count`=`count`;";
+            //string sql = @"UPDATE salesorder SET `count`=`count`;";
             //执行ddl成功后，会返回-1
             int rst = DbContext.DbHelper.ExecuteSql(sql.Replace("\r\n", " "));
             Console.WriteLine("result:" + rst);
@@ -113,16 +108,16 @@ namespace Test
             //     new SQLiteParameter{ParameterName="@amount",DbType=System.Data.DbType.Decimal,Value=129.92},
             //};
             //ora
-            List<DbParameter> paras = new List<DbParameter>()
-            {
-                 new OracleParameter{ParameterName=":id",DbType=System.Data.DbType.Int32,Value=1},
-                 new OracleParameter{ParameterName=":code",DbType=System.Data.DbType.String,Value="001"},
-                 new OracleParameter{ParameterName=":orderdate",DbType=System.Data.DbType.DateTime,Value=DateTime.Now},
-                 new OracleParameter{ParameterName=":count",DbType=System.Data.DbType.Int32,Value=10},
-                 new OracleParameter{ParameterName=":amount",DbType=System.Data.DbType.Decimal,Value=129.92},
-            };
-            int rst = DbContext.DbHelper.ExecuteSql(sql.Replace("\r\n", " "), paras.ToArray());
-            Console.WriteLine("result:" + rst);
+            //List<DbParameter> paras = new List<DbParameter>()
+            //{
+            //     new OracleParameter{ParameterName=":id",DbType=System.Data.DbType.Int32,Value=1},
+            //     new OracleParameter{ParameterName=":code",DbType=System.Data.DbType.String,Value="001"},
+            //     new OracleParameter{ParameterName=":orderdate",DbType=System.Data.DbType.DateTime,Value=DateTime.Now},
+            //     new OracleParameter{ParameterName=":count",DbType=System.Data.DbType.Int32,Value=10},
+            //     new OracleParameter{ParameterName=":amount",DbType=System.Data.DbType.Decimal,Value=129.92},
+            //};
+            //int rst = DbContext.DbHelper.ExecuteSql(sql.Replace("\r\n", " "), paras.ToArray());
+            //Console.WriteLine("result:" + rst);
 
 
             //sql = @"insert into salesorderitems(id,code,parent,name,amount,count) values(@id,@code,@parent,@name,@amount,@count);";
@@ -135,8 +130,16 @@ namespace Test
             //    new SqlParameter{ParameterName="@amount",DbType=System.Data.DbType.Decimal,Value=12},
             //    new SqlParameter{ParameterName="@count",DbType=System.Data.DbType.Int32,Value=2},
             //};
-            //rst = DbContext.DbHelper.ExecuteSql(sql.Replace("\r\n", " "), paras.ToArray());
-            //Console.WriteLine("result:" + rst);
+            List<KeyValuePair<string, object>> paras = new List<KeyValuePair<string, object>>()
+            {
+                new KeyValuePair<string,object>(DbContext.VariablePrefix+"id",1),
+                new KeyValuePair<string,object>(DbContext.VariablePrefix+"code","01"),
+                new KeyValuePair<string,object>(DbContext.VariablePrefix+"orderdate",DateTime.Now),
+                new KeyValuePair<string,object>(DbContext.VariablePrefix+"count",10),
+                new KeyValuePair<string,object>(DbContext.VariablePrefix+"amount",129.92),
+            };
+            int rst = DbContext.DbHelper.ExecuteSql(sql.Replace("\r\n", " "), paras.ToArray());
+            Console.WriteLine("result:" + rst);
         }
 
         static void ExecuteScalarTest()
@@ -155,8 +158,8 @@ namespace Test
             //mysql
             string sql = @"select amount from salesorder where amount > @amount limit 1";
             //object rst = DbContext.DbHelper.ExecuteScalar(sql, new SqlParameter { ParameterName = "@amount", DbType = System.Data.DbType.Decimal, Value = 10 });
-            object rst = DbContext.DbHelper.ExecuteScalar(sql, new MySqlParameter { ParameterName = "@amount", DbType = System.Data.DbType.Decimal, Value = 10 });
-            Console.WriteLine("amount:" + Convert.ToDecimal(rst));
+            //object rst = DbContext.DbHelper.ExecuteScalar(sql, new MySqlParameter { ParameterName = "@amount", DbType = System.Data.DbType.Decimal, Value = 10 });
+            //Console.WriteLine("amount:" + Convert.ToDecimal(rst));
         }
 
         static void GetDataSetTest()
@@ -175,8 +178,8 @@ namespace Test
             string sql = "select * from salesorder where orderdate > @date";
             //mss
             //DataSet ds = DbContext.DbHelper.GetDataSet(sql, new SqlParameter { ParameterName = "@date", DbType = System.Data.DbType.DateTime, Value = new DateTime(2016, 4, 17) });
-            DataSet ds = DbContext.DbHelper.GetDataSet(sql, new MySqlParameter { ParameterName = "@date", DbType = System.Data.DbType.DateTime, Value = new DateTime(2016, 4, 17) });
-            Console.WriteLine("row count:" + (ds.HasRow() ? ds.Tables[0].Rows.Count : 0));
+            //DataSet ds = DbContext.DbHelper.GetDataSet(sql, new MySqlParameter { ParameterName = "@date", DbType = System.Data.DbType.DateTime, Value = new DateTime(2016, 4, 17) });
+            //Console.WriteLine("row count:" + (ds.HasRow() ? ds.Tables[0].Rows.Count : 0));
         }
     }
 }

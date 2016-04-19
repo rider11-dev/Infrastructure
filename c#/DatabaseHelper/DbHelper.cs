@@ -11,22 +11,21 @@ using ZPF.Infrastructure.Components;
 
 namespace ZPF.Infrastructure.DatabaseHelper
 {
-    internal abstract class DbHelper : IDbHelper
+    internal class DbHelper : IDbHelper
     {
         #region 属性变量
-        public abstract DbType DbType { get; }
         private DbConnection _conn;
         /// <summary>
         /// 数据库连接
         /// </summary>
-        public DbConnection Connection
+        protected DbConnection Connection
         {
             get
             {
                 if (this._conn == null)
                 {
-                    string connstr = DbConfigureHelper.GetConnectString();
-                    this._conn = this.GetConnection();
+                    this._conn = _dbProviderFactory.CreateConnection();
+                    this._conn.ConnectionString = DbConfigureHelper.ConnectString;
                 }
                 return this._conn;
             }
@@ -36,32 +35,25 @@ namespace ZPF.Infrastructure.DatabaseHelper
             }
         }
 
-        string _connStr = string.Empty;
-        protected string ConnString
-        {
-            get
-            {
-                if (string.IsNullOrEmpty(_connStr))
-                {
-                    _connStr = DbConfigureHelper.GetConnectString();
-                }
-                return _connStr;
-            }
-        }
-
-        /// <summary>
-        /// 是否自动关闭连接
-        /// </summary>
-        public bool AutoClose { get; set; }
-
         const string Msg_Error = "数据库操作失败";
 
-        protected DbTransaction _transaction = null;
+        DbProviderFactory _dbProviderFactory = null;
         #endregion
 
         public DbHelper()
         {
-            AutoClose = true;
+            try
+            {
+                _dbProviderFactory = DbProviderFactories.GetFactory(DbConfigureHelper.Provider);
+            }
+            catch (Exception ex)
+            {
+                throw new ArgumentException("无法创建指定类型的DbProviderFactory实例");
+            }
+            if (_dbProviderFactory == null)
+            {
+                throw new ArgumentException("无法创建指定类型的DbProviderFactory实例");
+            }
         }
 
         #region 外部方法
@@ -86,66 +78,54 @@ namespace ZPF.Infrastructure.DatabaseHelper
             return true;
         }
 
-
-        public int ExecuteSql(string sql, params DbParameter[] dbParams)
+        public int ExecuteSql(string sql, params KeyValuePair<string, object>[] dbParams)
         {
-            DbCommand cmd = this.GetDbCommand(sql);
-            cmd.Transaction = _transaction;
-            cmd.Parameters.AddRange(dbParams);
+            DbCommand cmd = BuildDbCommand(sql, dbParams);
             return ExecuteNonQueryCore(cmd);
         }
 
-        public object ExecuteScalar(string sql, params DbParameter[] dbParams)
+
+        public object ExecuteScalar(string sql, params KeyValuePair<string, object>[] dbParams)
         {
-            DbCommand cmd = this.GetDbCommand(sql);
-            cmd.Transaction = _transaction;
-            cmd.Parameters.AddRange(dbParams);
+            DbCommand cmd = BuildDbCommand(sql, dbParams);
             return ExecuteScalarCore(cmd);
         }
 
-        public DataSet GetDataSet(string sql, params DbParameter[] dbParams)
+        public DataSet GetDataSet(string sql, params KeyValuePair<string, object>[] dbParams)
         {
-            DbDataAdapter adapter = GetDataAdapter(sql, dbParams);
-            foreach (DbCommand cmd in new[] { adapter.SelectCommand, adapter.InsertCommand, adapter.UpdateCommand, adapter.DeleteCommand })
-            {
-                if (cmd != null)
-                {
-                    cmd.Transaction = _transaction;
-                }
-            }
+            DbCommand cmd = BuildDbCommand(sql, dbParams);
+            DbDataAdapter adapter = _dbProviderFactory.CreateDataAdapter();
+            adapter.SelectCommand = cmd;
             return GetDataSetCore(adapter);
-        }
-
-        public void BeginTransaction()
-        {
-            AutoClose = false;
-            Connection.Open();
-            _transaction = Connection.BeginTransaction();
-        }
-
-        public void Commit()
-        {
-            if (_transaction != null)
-            {
-                _transaction.Commit();
-            }
-        }
-
-        public void Rollback()
-        {
-            if (_transaction != null)
-            {
-                _transaction.Rollback();
-            }
         }
 
         #endregion
 
         #region 私有方法
+        private DbCommand BuildDbCommand(string sql, params KeyValuePair<string, object>[] dbParams)
+        {
+            DbCommand cmd = _dbProviderFactory.CreateCommand();
+            cmd.Connection = Connection;
+            cmd.CommandText = sql;
+            BuildDbParameters(dbParams, cmd);
+            return cmd;
+        }
+
+        private void BuildDbParameters(KeyValuePair<string, object>[] dbParams, DbCommand cmd)
+        {
+            DbParameter para = null;
+            foreach (KeyValuePair<string, object> kvp in dbParams)
+            {
+                para = _dbProviderFactory.CreateParameter();
+                para.ParameterName = kvp.Key;
+                para.Value = kvp.Value;
+
+                cmd.Parameters.Add(para);
+            }
+        }
         private int ExecuteNonQueryCore(DbCommand cmd)
         {
             int result = 0;
-            bool error = false;
             try
             {
                 Open();
@@ -153,20 +133,12 @@ namespace ZPF.Infrastructure.DatabaseHelper
             }
             catch (Exception ex)
             {
-                error = true;
-                if (cmd.Transaction != null)
-                {
-                    cmd.Transaction.Rollback();
-                }
                 throw new Exception(Msg_Error + "," + ex.Message, ex);
             }
             finally
             {
                 cmd.Dispose();
-                if (AutoClose || error)
-                {
-                    Close();
-                }
+                Close();
             }
 
             return result;
@@ -175,7 +147,6 @@ namespace ZPF.Infrastructure.DatabaseHelper
         private object ExecuteScalarCore(DbCommand cmd)
         {
             object result = 0;
-            bool error = false;
             try
             {
                 Open();
@@ -183,20 +154,12 @@ namespace ZPF.Infrastructure.DatabaseHelper
             }
             catch (Exception ex)
             {
-                error = true;
-                if (cmd.Transaction != null)
-                {
-                    cmd.Transaction.Rollback();
-                }
                 throw new Exception(Msg_Error + "," + ex.Message, ex);
             }
             finally
             {
                 cmd.Dispose();
-                if (AutoClose || error)
-                {
-                    Close();
-                }
+                Close();
             }
 
             return result;
@@ -205,33 +168,22 @@ namespace ZPF.Infrastructure.DatabaseHelper
         private DataSet GetDataSetCore(DbDataAdapter adapter)
         {
             DataSet ds = new DataSet();
-            bool exHappened = false;
             try
             {
                 adapter.Fill(ds);
             }
             catch (Exception ex)
             {
-                exHappened = true;
                 throw new Exception(Msg_Error + "," + ex.Message, ex);
             }
             finally
             {
-                if (AutoClose || exHappened)
-                {
-                    Close();
-                }
+                Close();
             }
 
             return ds;
         }
 
-        #endregion
-
-        #region 子类实现方法
-        protected abstract DbConnection GetConnection();
-        protected abstract DbCommand GetDbCommand(string sql);
-        protected abstract DbDataAdapter GetDataAdapter(string sql, params DbParameter[] dbParams);
         #endregion
 
         /// <summary>

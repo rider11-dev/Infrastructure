@@ -10,20 +10,11 @@ namespace ZPF.Infrastructure.DatabaseHelper
 {
     public interface IDbHelper
     {
-        DbType DbType { get; }
-        DbConnection Connection { get; set; }
-
-        bool AutoClose { get; set; }
-
         bool TestConnection();
-        int ExecuteSql(string sql, params DbParameter[] dbParams);
+        int ExecuteSql(string sql, params KeyValuePair<string, object>[] dbParams);
 
-        object ExecuteScalar(string sql, params DbParameter[] dbParams);
+        object ExecuteScalar(string sql, params KeyValuePair<string, object>[] dbParams);
 
-        DataSet GetDataSet(string sql, params DbParameter[] dbParams);
-
-        void BeginTransaction();
-        void Commit();
-        void Rollback();
+        DataSet GetDataSet(string sql, params KeyValuePair<string, object>[] dbParams);
     }
 }

@@ -18,9 +18,34 @@ namespace ZPF.Infrastructure.DatabaseHelper
             {
                 if (_currentDbHelper == null)
                 {
-                    _currentDbHelper = DbHelperFactory.CreateInstance();
+                    _currentDbHelper = new DbHelper();
                 }
                 return _currentDbHelper;
+            }
+        }
+
+        public static DbType DbType
+        {
+            get
+            {
+                var provider = DbConfigureHelper.Provider.ToLower();
+                if (provider.Contains("sqlclient"))
+                {
+                    return DbType.SqlServer;
+                }
+                if (provider.Contains("sqlite"))
+                {
+                    return DbType.SQLite;
+                }
+                if (provider.Contains("oracle"))
+                {
+                    return DbType.Oracle;
+                }
+                if (provider.Contains("mysql"))
+                {
+                    return DbType.MySQL;
+                }
+                return DbType.UnKnown;
             }
         }
 
@@ -28,11 +53,11 @@ namespace ZPF.Infrastructure.DatabaseHelper
         {
             get
             {
-                switch (DbHelper.DbType)
+                switch (DbType)
                 {
                     case DbType.SqlServer:
                     case DbType.MySQL:
-                    case DbType.SqlLite:
+                    case DbType.SQLite:
                         return "@";
                     case DbType.Oracle:
                         return ":";
