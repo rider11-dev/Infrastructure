@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Logger.LogHelper
+namespace Logger
 {
     public class NLogHelper<T> : ILogHelper<T>
     {

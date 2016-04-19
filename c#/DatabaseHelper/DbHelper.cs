@@ -38,6 +38,32 @@ namespace ZPF.Infrastructure.DatabaseHelper
         const string Msg_Error = "数据库操作失败";
 
         DbProviderFactory _dbProviderFactory = null;
+
+        public DbType DbType
+        {
+            get
+            {
+                var providerType = _dbProviderFactory.GetType().Name.ToLower();
+                if (providerType.Contains("sqlclient") && !providerType.Contains("mysql"))
+                {
+                    return DbType.SqlServer;
+                }
+                if (providerType.Contains("sqlite"))
+                {
+                    return DbType.SQLite;
+                }
+                if (providerType.Contains("oracle"))
+                {
+                    return DbType.Oracle;
+                }
+                if (providerType.Contains("mysql"))
+                {
+                    return DbType.MySQL;
+                }
+                return DbType.UnKnown;
+            }
+        }
+        DbTransaction _dbTransaction = null;
         #endregion
 
         public DbHelper()
@@ -99,6 +125,32 @@ namespace ZPF.Infrastructure.DatabaseHelper
             return GetDataSetCore(adapter);
         }
 
+        public void BeginTransaction()
+        {
+            Open();
+            _dbTransaction = Connection.BeginTransaction();
+        }
+
+        public void Commit()
+        {
+            if (_dbTransaction == null)
+            {
+                return;
+            }
+            _dbTransaction.Commit();
+            ReleaseTransaction();
+        }
+
+        public void Rollback()
+        {
+            if (_dbTransaction == null)
+            {
+                return;
+            }
+            _dbTransaction.Rollback();
+            ReleaseTransaction();
+        }
+
         #endregion
 
         #region 私有方法
@@ -107,6 +159,10 @@ namespace ZPF.Infrastructure.DatabaseHelper
             DbCommand cmd = _dbProviderFactory.CreateCommand();
             cmd.Connection = Connection;
             cmd.CommandText = sql;
+            if (_dbTransaction != null)
+            {
+                cmd.Transaction = _dbTransaction;
+            }
             BuildDbParameters(dbParams, cmd);
             return cmd;
         }
@@ -123,6 +179,7 @@ namespace ZPF.Infrastructure.DatabaseHelper
                 cmd.Parameters.Add(para);
             }
         }
+
         private int ExecuteNonQueryCore(DbCommand cmd)
         {
             int result = 0;
@@ -138,7 +195,10 @@ namespace ZPF.Infrastructure.DatabaseHelper
             finally
             {
                 cmd.Dispose();
-                Close();
+                if (cmd.Transaction == null)
+                {
+                    Close();
+                }
             }
 
             return result;
@@ -159,7 +219,10 @@ namespace ZPF.Infrastructure.DatabaseHelper
             finally
             {
                 cmd.Dispose();
-                Close();
+                if (cmd.Transaction == null)
+                {
+                    Close();
+                }
             }
 
             return result;
@@ -178,10 +241,25 @@ namespace ZPF.Infrastructure.DatabaseHelper
             }
             finally
             {
-                Close();
+                if (adapter.SelectCommand.Transaction == null)
+                {
+                    Close();
+                }
             }
 
             return ds;
+        }
+
+        private void ReleaseTransaction()
+        {
+            if (_dbTransaction == null)
+            {
+                return;
+            }
+
+            _dbTransaction.Dispose();
+            _dbTransaction = null;
+            Close();
         }
 
         #endregion
@@ -208,7 +286,7 @@ namespace ZPF.Infrastructure.DatabaseHelper
         /// </summary>
         protected void Close()
         {
-            if (this._conn != null)
+            if (this._conn != null && this._conn.State == ConnectionState.Open)
             {
                 this._conn.Close();
             }

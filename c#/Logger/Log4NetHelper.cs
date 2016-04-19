@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 
 [assembly: log4net.Config.XmlConfigurator(Watch = true, ConfigFile = "log4net.config")]
-namespace Logger.LogHelper
+namespace Logger.Log4net
 {
     /// <summary>
     /// 日志辅助类，使用log4net

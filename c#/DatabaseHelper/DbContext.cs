@@ -28,24 +28,7 @@ namespace ZPF.Infrastructure.DatabaseHelper
         {
             get
             {
-                var provider = DbConfigureHelper.Provider.ToLower();
-                if (provider.Contains("sqlclient"))
-                {
-                    return DbType.SqlServer;
-                }
-                if (provider.Contains("sqlite"))
-                {
-                    return DbType.SQLite;
-                }
-                if (provider.Contains("oracle"))
-                {
-                    return DbType.Oracle;
-                }
-                if (provider.Contains("mysql"))
-                {
-                    return DbType.MySQL;
-                }
-                return DbType.UnKnown;
+                return DbHelper.DbType;
             }
         }
 

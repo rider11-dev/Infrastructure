@@ -1,17 +1,10 @@
-﻿using Logger.LogHelper;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using ZPF.Infrastructure.DatabaseHelper;
 using ZPF.Infrastructure.Components.Extensions;
-using MySql.Data.MySqlClient;
-using System.Data.Common;
-using System.Data.SQLite;
-using Oracle.ManagedDataAccess.Client;
+using Logger;
+using Logger.Log4net;
 
 namespace Test
 {
@@ -23,7 +16,7 @@ namespace Test
             ConnectTest();
 
             //ExecuteSqlTest();
-            ExecuteSqlWithParamsTest();
+            //ExecuteSqlWithParamsTest();
 
             //ExecuteScalarTest();
             //ExecuteScalarWithParamsTest();
@@ -31,19 +24,28 @@ namespace Test
             //GetDataSetTest();
             //GetDataSetWithParameterTest();
 
-            //TransactionTest();
+            TransactionTest();
         }
 
         static void TransactionTest()
         {
+            string sql1 = "update salesorder set count=2";
+            string sql2 = "update salesorder set amount=3";
+            int rst = 0;
             try
             {
-                //string sql1 = "update salesorder set count=222";
-                //string sql2 = "update salesorderitems set cogunt=22";
+                DbContext.DbHelper.BeginTransaction();
+                rst += DbContext.DbHelper.ExecuteSql(sql1);
+                rst += DbContext.DbHelper.ExecuteSql(sql2);
+                DbContext.DbHelper.Commit();
+                //DbContext.DbHelper.Rollback();
             }
-            catch (Exception ex)
+            catch
             {
+                DbContext.DbHelper.Rollback();
+                rst = 0;
             }
+            Console.WriteLine("result:" + rst);
         }
 
         static void ConnectTest()
@@ -53,10 +55,12 @@ namespace Test
             {
                 bool rst = DbContext.DbHelper.TestConnection();
                 Console.WriteLine("connect test result:" + (rst ? "true" : "false"));
+                Console.WriteLine("db type:" + DbContext.DbType.GetString<ZPF.Infrastructure.DatabaseHelper.DbType>());
             }
             catch (Exception ex)
             {
-                logHelper.LogError(ex);
+                //logHelper.LogError(ex);
+                throw ex;
             }
             logHelper.LogInfo("end:execute ConnectTest");
         }
@@ -75,11 +79,11 @@ namespace Test
         static void ExecuteSqlWithParamsTest()
         {
             //mss|sqlite
-            //string sql = @"insert into SalesOrder(id,code,orderdate,count,amount) values(@id,@code,@orderdate,@count,@amount);";
+            string sql = @"insert into SalesOrder(id,code,orderdate,count,amount) values(@id,@code,@orderdate,@count,@amount);";
             //mysql
             //string sql = @"insert into SalesOrder(id,code,orderdate,`count`,amount) values(@id,@code,@orderdate,@count,@amount);";
             //ora
-            string sql = "insert into SCOTT.\"salesorder\"(\"id\",\"code\",\"orderdate\",\"count\",\"amount\") values(:id,:code,:orderdate,:count,:amount)";
+            //string sql = "insert into SCOTT.\"salesorder\"(\"id\",\"code\",\"orderdate\",\"count\",\"amount\") values(:id,:code,:orderdate,:count,:amount)";
             //mss
             //List<SqlParameter> paras = new List<SqlParameter>()
             //{

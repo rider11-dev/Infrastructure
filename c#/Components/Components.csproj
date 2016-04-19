@@ -49,6 +49,7 @@
     <Compile Include="Common.cs" />
     <Compile Include="ConfigureHelper.cs" />
     <Compile Include="Extensions\DataExtention.cs" />
+    <Compile Include="Extensions\EnumExtension.cs" />
     <Compile Include="Extensions\ExceptionExtension.cs" />
     <Compile Include="PinYinConverter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
