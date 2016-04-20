@@ -74,7 +74,7 @@ namespace ZPF.Infrastructure.DatabaseHelper
             }
             catch (Exception ex)
             {
-                throw new ArgumentException("无法创建指定类型的DbProviderFactory实例");
+                throw new ArgumentException("无法创建指定类型的DbProviderFactory实例", ex);
             }
             if (_dbProviderFactory == null)
             {
