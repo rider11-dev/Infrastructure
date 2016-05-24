@@ -9,7 +9,13 @@ namespace ZPF.Infrastructure.Components
     /// </summary>
     public class ConfigureHelper
     {
-        const string Msg_Error_ReadConfigFile = "读取配置文件错误";
+        private string Msg_Error_ReadConfigFile
+        {
+            get
+            {
+                return global::ZPF.Infrastructure.Components.Resource.Msg_Error_ReadConfigFile;
+            }
+        }
         ExeConfigurationFileMap _configMap = null;
         Configuration _conf;
         public Configuration Configuration
@@ -41,7 +47,8 @@ namespace ZPF.Infrastructure.Components
             _configMap.ExeConfigFilename = configFile;
         }
 
-        public ConfigureHelper() : this(Common.ConfigureFile)
+        public ConfigureHelper()
+            : this(Common.ConfigureFile)
         {
 
         }
